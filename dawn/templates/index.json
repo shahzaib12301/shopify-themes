@@ -1,84 +1,302 @@
-/*
- * ------------------------------------------------------------
- * IMPORTANT: The contents of this file are auto-generated.
- *
- * This file may be updated by the Shopify admin theme editor
- * or related systems. Please exercise caution as any changes
- * made to this file may be overwritten.
- * ------------------------------------------------------------
- */
 {
   "sections": {
-    "image_banner": {
+    "hero": {
+      "type": "slideshow",
+      "blocks": {
+        "slide_1": {
+          "type": "slide",
+          "settings": {
+            "heading": "Premium Essentials for Everyday Life",
+            "heading_size": "hxl",
+            "subheading": "Health, fitness, leather & accessories — quality you can trust.",
+            "button_label": "Shop Best Sellers",
+            "link": "shopify://collections/all",
+            "button_style_secondary": false,
+            "box_align": "middle-left",
+            "show_text_box": true,
+            "text_alignment": "left",
+            "image_overlay_opacity": 40,
+            "color_scheme": "scheme-3",
+            "text_alignment_mobile": "center"
+          }
+        },
+        "slide_2": {
+          "type": "slide",
+          "settings": {
+            "heading": "Cash on Delivery — All Over Pakistan",
+            "heading_size": "hxl",
+            "subheading": "Fast shipping. Easy returns. Secure checkout.",
+            "button_label": "Explore Collections",
+            "link": "shopify://collections/all",
+            "button_style_secondary": false,
+            "box_align": "middle-left",
+            "show_text_box": true,
+            "text_alignment": "left",
+            "image_overlay_opacity": 40,
+            "color_scheme": "scheme-3",
+            "text_alignment_mobile": "center"
+          }
+        }
+      },
+      "block_order": ["slide_1", "slide_2"],
+      "settings": {
+        "layout": "full_bleed",
+        "slide_height": "large",
+        "slider_visual": "counter",
+        "auto_rotate": true,
+        "change_slides_speed": 6,
+        "show_text_below": false
+      }
+    },
+    "categories": {
+      "type": "collection-list",
+      "blocks": {
+        "cat_1": { "type": "featured_collection", "settings": {} },
+        "cat_2": { "type": "featured_collection", "settings": {} },
+        "cat_3": { "type": "featured_collection", "settings": {} },
+        "cat_4": { "type": "featured_collection", "settings": {} },
+        "cat_5": { "type": "featured_collection", "settings": {} },
+        "cat_6": { "type": "featured_collection", "settings": {} },
+        "cat_7": { "type": "featured_collection", "settings": {} }
+      },
+      "block_order": ["cat_1", "cat_2", "cat_3", "cat_4", "cat_5", "cat_6", "cat_7"],
+      "settings": {
+        "title": "Shop by Category",
+        "heading_size": "h1",
+        "image_ratio": "square",
+        "columns_desktop": 4,
+        "color_scheme": "scheme-1",
+        "show_view_all": true,
+        "columns_mobile": "2",
+        "swipe_on_mobile": true,
+        "padding_top": 48,
+        "padding_bottom": 24
+      }
+    },
+    "trust": {
+      "type": "multicolumn",
+      "blocks": {
+        "trust_1": {
+          "type": "column",
+          "settings": {
+            "title": "Fast Shipping",
+            "text": "<p>Quick, reliable delivery across Pakistan.</p>"
+          }
+        },
+        "trust_2": {
+          "type": "column",
+          "settings": {
+            "title": "Best Quality",
+            "text": "<p>Carefully sourced, premium-grade products.</p>"
+          }
+        },
+        "trust_3": {
+          "type": "column",
+          "settings": {
+            "title": "Easy Returns",
+            "text": "<p>Hassle-free 7-day return policy.</p>"
+          }
+        },
+        "trust_4": {
+          "type": "column",
+          "settings": {
+            "title": "Cash on Delivery",
+            "text": "<p>Pay when it arrives — all over Pakistan.</p>"
+          }
+        }
+      },
+      "block_order": ["trust_1", "trust_2", "trust_3", "trust_4"],
+      "settings": {
+        "title": "Why Shop With Us",
+        "heading_size": "h2",
+        "image_width": "third",
+        "image_ratio": "circle",
+        "columns_desktop": 4,
+        "column_alignment": "center",
+        "background_style": "none",
+        "color_scheme": "scheme-2",
+        "columns_mobile": "2",
+        "swipe_on_mobile": false,
+        "padding_top": 40,
+        "padding_bottom": 40
+      }
+    },
+    "best_sellers": {
+      "type": "featured-collection",
+      "settings": {
+        "title": "Best Sellers",
+        "heading_size": "h1",
+        "description": "",
+        "show_description": false,
+        "collection": "",
+        "products_to_show": 8,
+        "columns_desktop": 4,
+        "full_width": false,
+        "show_view_all": true,
+        "view_all_style": "outline",
+        "enable_desktop_slider": false,
+        "color_scheme": "scheme-1",
+        "image_ratio": "square",
+        "image_shape": "default",
+        "show_secondary_image": true,
+        "show_vendor": false,
+        "show_rating": false,
+        "quick_add": "standard",
+        "columns_mobile": "2",
+        "swipe_on_mobile": true,
+        "padding_top": 48,
+        "padding_bottom": 48
+      }
+    },
+    "promo": {
       "type": "image-banner",
       "blocks": {
         "heading": {
           "type": "heading",
           "settings": {
-            "heading": "Browse our latest products",
+            "heading": "Gear Up. Level Up.",
             "heading_size": "h0"
           }
         },
-        "button": {
+        "text": {
+          "type": "text",
+          "settings": {
+            "text": "Premium fitness, leather & accessories — now with COD nationwide.",
+            "text_style": "body"
+          }
+        },
+        "buttons": {
           "type": "buttons",
           "settings": {
-            "button_label_1": "Shop all",
+            "button_label_1": "Shop Now",
             "button_link_1": "shopify://collections/all",
-            "button_style_secondary_1": true,
+            "button_style_secondary_1": false,
             "button_label_2": "",
             "button_link_2": "",
             "button_style_secondary_2": false
           }
         }
       },
-      "block_order": [
-        "heading",
-        "button"
-      ],
+      "block_order": ["heading", "text", "buttons"],
       "settings": {
-        "image_overlay_opacity": 40,
-        "image_height": "large",
-        "desktop_content_position": "bottom-center",
-        "show_text_box": false,
+        "image_overlay_opacity": 30,
+        "image_height": "medium",
+        "desktop_content_position": "middle-center",
+        "show_text_box": true,
         "desktop_content_alignment": "center",
         "color_scheme": "scheme-3",
         "image_behavior": "none",
         "mobile_content_alignment": "center",
-        "stack_images_on_mobile": false,
+        "stack_images_on_mobile": true,
         "show_text_below": false
       }
     },
-    "featured_collection": {
+    "testimonials": {
+      "type": "multicolumn",
+      "blocks": {
+        "review_1": {
+          "type": "column",
+          "settings": {
+            "title": "★★★★★",
+            "text": "<p>\"Great quality and super fast delivery. Highly recommend!\"</p><p><strong>— Ayesha K.</strong></p>"
+          }
+        },
+        "review_2": {
+          "type": "column",
+          "settings": {
+            "title": "★★★★★",
+            "text": "<p>\"Ordered a leather wallet — feels genuinely premium. COD made it easy.\"</p><p><strong>— Bilal R.</strong></p>"
+          }
+        },
+        "review_3": {
+          "type": "column",
+          "settings": {
+            "title": "★★★★★",
+            "text": "<p>\"Excellent gym accessories at a fair price. Will definitely buy again.\"</p><p><strong>— Hamza S.</strong></p>"
+          }
+        }
+      },
+      "block_order": ["review_1", "review_2", "review_3"],
+      "settings": {
+        "title": "What Our Customers Say",
+        "heading_size": "h1",
+        "image_width": "third",
+        "image_ratio": "circle",
+        "columns_desktop": 3,
+        "column_alignment": "center",
+        "background_style": "primary",
+        "color_scheme": "scheme-2",
+        "columns_mobile": "1",
+        "swipe_on_mobile": true,
+        "padding_top": 48,
+        "padding_bottom": 48
+      }
+    },
+    "new_arrivals": {
       "type": "featured-collection",
       "settings": {
-        "title": "Featured products",
-        "heading_size": "h2",
+        "title": "New Arrivals",
+        "heading_size": "h1",
         "description": "",
         "show_description": false,
-        "description_style": "body",
-        "collection": "all",
-        "products_to_show": 8,
+        "collection": "",
+        "products_to_show": 4,
         "columns_desktop": 4,
         "full_width": false,
         "show_view_all": true,
-        "view_all_style": "solid",
+        "view_all_style": "link",
         "enable_desktop_slider": false,
         "color_scheme": "scheme-1",
-        "image_ratio": "adapt",
+        "image_ratio": "square",
         "image_shape": "default",
         "show_secondary_image": true,
         "show_vendor": false,
         "show_rating": false,
-        "quick_add": "none",
+        "quick_add": "standard",
         "columns_mobile": "2",
-        "swipe_on_mobile": false,
-        "padding_top": 44,
-        "padding_bottom": 36
+        "swipe_on_mobile": true,
+        "padding_top": 24,
+        "padding_bottom": 48
+      }
+    },
+    "newsletter": {
+      "type": "newsletter",
+      "blocks": {
+        "heading": {
+          "type": "heading",
+          "settings": {
+            "heading": "Get 10% Off Your First Order",
+            "heading_size": "h1"
+          }
+        },
+        "paragraph": {
+          "type": "paragraph",
+          "settings": {
+            "text": "<p>Join our list for new drops, exclusive offers, and COD deals.</p>"
+          }
+        },
+        "email": {
+          "type": "email_form",
+          "settings": {}
+        }
+      },
+      "block_order": ["heading", "paragraph", "email"],
+      "settings": {
+        "color_scheme": "scheme-2",
+        "full_width": true,
+        "padding_top": 52,
+        "padding_bottom": 52
       }
     }
   },
   "order": [
-    "image_banner",
-    "featured_collection"
+    "hero",
+    "categories",
+    "trust",
+    "best_sellers",
+    "promo",
+    "testimonials",
+    "new_arrivals",
+    "newsletter"
   ]
 }
