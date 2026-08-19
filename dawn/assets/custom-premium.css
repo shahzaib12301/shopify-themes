@@ -67,6 +67,46 @@ summary {
   padding-bottom: 3rem;
 }
 
+/* --- Cart drawer: free-shipping progress bar ------------------------------- */
+.free-shipping-bar {
+  padding: 1.4rem 0 1.8rem;
+  margin-bottom: 0.5rem;
+  border-bottom: 0.1rem solid rgba(var(--color-foreground), 0.08);
+}
+
+.free-shipping-bar__message {
+  margin: 0 0 0.9rem;
+  font-size: 1.3rem;
+  text-align: center;
+  color: rgba(var(--color-foreground), 0.9);
+}
+
+.free-shipping-bar__message--earned {
+  color: rgb(var(--color-button));
+  font-weight: var(--font-body-weight-bold, 700);
+}
+
+.free-shipping-bar__track {
+  height: 0.6rem;
+  background: rgba(var(--color-foreground), 0.1);
+  border-radius: 1rem;
+  overflow: hidden;
+}
+
+.free-shipping-bar__progress {
+  display: block;
+  height: 100%;
+  background: rgb(var(--color-button));
+  border-radius: 1rem;
+  transition: width 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* --- Product page: tidy trust-badge row spacing ---------------------------- */
+.product__accordion .accordion__title,
+.product .icon-with-text {
+  margin-top: 1.5rem;
+}
+
 /* --- Accessibility: honour reduced-motion preferences ---------------------- */
 @media (prefers-reduced-motion: reduce) {
   .card__media img,
@@ -75,7 +115,8 @@ summary {
   .link,
   summary,
   .header__submenu,
-  .mega-menu__content {
+  .mega-menu__content,
+  .free-shipping-bar__progress {
     transition: none !important;
   }
 

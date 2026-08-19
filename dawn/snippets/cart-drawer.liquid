@@ -83,6 +83,28 @@
         >
           <div id="CartDrawer-CartItems" class="drawer__contents js-contents">
             {%- if cart != empty -%}
+              {%- if settings.show_free_shipping_bar -%}
+                {%- assign fs_threshold = settings.free_shipping_threshold | times: 100 -%}
+                {%- if fs_threshold > 0 -%}
+                  <div class="free-shipping-bar">
+                    {%- if cart.total_price >= fs_threshold -%}
+                      <p class="free-shipping-bar__message free-shipping-bar__message--earned">
+                        {{ 'You have unlocked free shipping!' }}
+                      </p>
+                    {%- else -%}
+                      {%- assign fs_remaining = fs_threshold | minus: cart.total_price -%}
+                      <p class="free-shipping-bar__message">
+                        Add {{ fs_remaining | money }} more for <strong>free shipping</strong>
+                      </p>
+                    {%- endif -%}
+                    {%- assign fs_pct = cart.total_price | times: 100 | divided_by: fs_threshold -%}
+                    {%- if fs_pct > 100 -%}{%- assign fs_pct = 100 -%}{%- endif -%}
+                    <div class="free-shipping-bar__track">
+                      <span class="free-shipping-bar__progress" style="width: {{ fs_pct }}%;"></span>
+                    </div>
+                  </div>
+                {%- endif -%}
+              {%- endif -%}
               <div class="drawer__cart-items-wrapper">
                 <table class="cart-items" role="table">
                   <thead role="rowgroup">

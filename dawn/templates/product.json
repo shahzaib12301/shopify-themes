@@ -1,12 +1,3 @@
-/*
- * ------------------------------------------------------------
- * IMPORTANT: The contents of this file are auto-generated.
- *
- * This file may be updated by the Shopify admin theme editor
- * or related systems. Please exercise caution as any changes
- * made to this file may be overwritten.
- * ------------------------------------------------------------
- */
 {
   "sections": {
     "main": {
@@ -50,6 +41,10 @@
           "type": "title",
           "settings": {}
         },
+        "rating": {
+          "type": "rating",
+          "settings": {}
+        },
         "price": {
           "type": "price",
           "settings": {}
@@ -72,9 +67,37 @@
             "show_gift_card_recipient": true
           }
         },
+        "trust_badges": {
+          "type": "icon-with-text",
+          "settings": {
+            "layout": "horizontal",
+            "icon_1": "truck",
+            "heading_1": "Fast Shipping",
+            "icon_2": "box",
+            "heading_2": "Cash on Delivery",
+            "icon_3": "return",
+            "heading_3": "Easy Returns"
+          }
+        },
         "description": {
           "type": "description",
           "settings": {}
+        },
+        "tab_shipping": {
+          "type": "collapsible_tab",
+          "settings": {
+            "heading": "Shipping",
+            "icon": "truck",
+            "content": "<p>Fast, reliable delivery across Pakistan. Cash on Delivery available nationwide. Orders are typically dispatched within 24–48 hours.</p>"
+          }
+        },
+        "tab_returns": {
+          "type": "collapsible_tab",
+          "settings": {
+            "heading": "Returns & Exchanges",
+            "icon": "return",
+            "content": "<p>Easy 7-day returns. If your item isn't right, contact us and we'll help with a return or exchange.</p>"
+          }
         },
         "share": {
           "type": "share",
@@ -84,14 +107,18 @@
         }
       },
       "block_order": [
-        "event_bridge_v1_discord_tools_connect_awU3xE",
         "vendor",
         "title",
+        "rating",
         "price",
         "variant_picker",
         "quantity_selector",
         "buy_buttons",
+        "trust_badges",
         "description",
+        "tab_shipping",
+        "tab_returns",
+        "event_bridge_v1_discord_tools_connect_awU3xE",
         "share"
       ],
       "settings": {
@@ -100,10 +127,10 @@
         "media_size": "large",
         "constrain_to_viewport": true,
         "media_fit": "contain",
-        "gallery_layout": "stacked",
+        "gallery_layout": "thumbnail",
         "media_position": "left",
         "image_zoom": "lightbox",
-        "mobile_thumbnails": "hide",
+        "mobile_thumbnails": "show",
         "hide_variants": true,
         "enable_video_looping": true,
         "padding_top": 36,
