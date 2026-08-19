@@ -51,13 +51,31 @@ summary {
   letter-spacing: 0.04em;
 }
 
+/* --- Header dropdown / mega-menu: smooth reveal ---------------------------- */
+.header__submenu,
+.mega-menu__content {
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+/* --- Footer: refined heading spacing & top padding ------------------------- */
+.footer-block__heading {
+  letter-spacing: 0.02em;
+  margin-bottom: 1.6rem;
+}
+
+.footer__content-top {
+  padding-bottom: 3rem;
+}
+
 /* --- Accessibility: honour reduced-motion preferences ---------------------- */
 @media (prefers-reduced-motion: reduce) {
   .card__media img,
   .card .media img,
   a,
   .link,
-  summary {
+  summary,
+  .header__submenu,
+  .mega-menu__content {
     transition: none !important;
   }
 
