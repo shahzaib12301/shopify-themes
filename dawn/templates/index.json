@@ -44,7 +44,7 @@
         "slide_height": "large",
         "slider_visual": "counter",
         "auto_rotate": true,
-        "change_slides_speed": 6,
+        "change_slides_speed": 7,
         "show_text_below": false
       }
     },
