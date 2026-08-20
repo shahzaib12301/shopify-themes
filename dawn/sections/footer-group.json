@@ -19,19 +19,55 @@
     },
     "footer": {
       "type": "footer",
+      "blocks": {
+        "brand_text": {
+          "type": "text",
+          "settings": {
+            "heading": "TopKart.pk",
+            "subtext": "<p>Pakistan's home for premium health & fitness gear, bags, wallets, leather goods and car & mobile accessories — quality you can trust, at honest prices.</p><p><strong>Cash on Delivery</strong> available nationwide. Fast dispatch within 24–48 hours.</p>"
+          }
+        },
+        "shop_links": {
+          "type": "link_list",
+          "settings": {
+            "heading": "Shop",
+            "menu": "main-menu"
+          }
+        },
+        "help_links": {
+          "type": "link_list",
+          "settings": {
+            "heading": "Customer Service",
+            "menu": "footer"
+          }
+        },
+        "contact_text": {
+          "type": "text",
+          "settings": {
+            "heading": "Get in Touch",
+            "subtext": "<p>Have a question? Our team is here to help.</p><p>✉️ support@topkart.pk<br>💬 WhatsApp: +92 300 0000000<br>🕑 Mon–Sat, 10am–7pm (PKT)</p>"
+          }
+        }
+      },
+      "block_order": [
+        "brand_text",
+        "shop_links",
+        "help_links",
+        "contact_text"
+      ],
       "settings": {
         "color_scheme": "scheme-3",
         "newsletter_enable": false,
-        "newsletter_heading": "Subscribe to our emails",
-        "enable_follow_on_shop": true,
+        "newsletter_heading": "Join the TopKart family",
+        "enable_follow_on_shop": false,
         "show_social": true,
         "enable_country_selector": true,
         "enable_language_selector": true,
-        "payment_enable": true,
+        "payment_enable": false,
         "show_policy": true,
         "margin_top": 0,
-        "padding_top": 36,
-        "padding_bottom": 36
+        "padding_top": 48,
+        "padding_bottom": 40
       }
     }
   },

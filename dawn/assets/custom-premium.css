@@ -1,10 +1,17 @@
-/* ==========================================================================
+﻿/* ==========================================================================
    Premium polish layer
    Sits on top of Dawn's tokens and native hover animations (vertical-lift).
    Portable: copy this one file + its <link> in theme.liquid to reuse on any
-   Dawn 15 store. Only additive, complementary refinements live here — nothing
+   Dawn 15 store. Only additive, complementary refinements live here - nothing
    that overrides Dawn's button pseudo-element border/shadow construction.
    ========================================================================== */
+
+/* Brand accent (gold) as an rgb triple so it composes with rgba() like Dawn's tokens */
+:root {
+  --brand-gold: 200, 155, 60;
+  --brand-brown: 61, 50, 38; /* #3D3226 warm dark brown */
+  --brand-brown-mid: 122, 105, 82; /* #7A6952 lighter, warmer brown */
+}
 
 /* --- Product cards: gentle image zoom on hover -------------------------------
    Targets the <img> only (clipped by .card__media overflow:hidden), so it
@@ -49,6 +56,25 @@ summary {
 /* --- Sale badge: tighten the label so the gold badge feels intentional ------ */
 .badge {
   letter-spacing: 0.04em;
+}
+
+/* --- Announcement bar: slimmer bar + smaller, lighter text ----------------- */
+.announcement-bar__message {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  font-weight: var(--font-body-weight, 400);
+  letter-spacing: 0.04em;
+  min-height: 0;
+  padding-top: 0.95rem;
+  padding-bottom: 0.95rem;
+}
+
+/* Shrink the rotating-slider arrows so they don't force the old 3.8rem height */
+.announcement-bar .slider-button {
+  height: auto;
+  min-height: 0;
 }
 
 /* --- Header dropdown / mega-menu: smooth reveal ---------------------------- */
@@ -107,6 +133,1260 @@ summary {
   margin-top: 1.5rem;
 }
 
+/* --- Header: logo-left / nav-centered / icons-right (buckup-style) ---------
+   Dawn's middle-left layout packs the nav beside the logo (grid: auto auto 1fr).
+   Re-balancing to 1fr auto 1fr centers the nav between an evenly-weighted logo
+   column and icons column. Desktop only; mobile drawer layout is untouched. */
+@media screen and (min-width: 990px) {
+  .header--middle-left {
+    grid-template-columns: 1fr auto 1fr;
+    column-gap: 2rem;
+  }
+
+  .header--middle-left .header__heading,
+  .header--middle-left > .header__heading-link {
+    justify-self: start;
+  }
+
+  .header--middle-left .header__icons {
+    justify-self: end;
+  }
+
+  /* Comfortable, evenly-spaced primary nav */
+  .header--middle-left .header__inline-menu .list-menu--inline {
+    gap: 0.5rem 2.6rem;
+  }
+}
+
+/* --- Header: cart icon + total as one unit (buckup-style) ------------------ */
+.header__cart-wrap {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.header__cart-total {
+  align-self: center;
+  font-size: 1.35rem;
+  font-weight: 500;
+  white-space: nowrap;
+  text-decoration: none;
+  color: rgb(var(--color-foreground));
+  transition: color 0.2s ease;
+}
+
+/* Hovering either the cart icon OR the price highlights both */
+.header__cart-wrap:hover .header__icon,
+.header__cart-wrap:hover .header__cart-total {
+  color: rgb(var(--brand-gold));
+}
+
+/* Keep the mobile header uncluttered */
+@media screen and (max-width: 989px) {
+  .header__cart-total {
+    display: none;
+  }
+}
+
+/* --- Header: primary nav - bold, uppercase, evenly spaced ------------------ */
+@media screen and (min-width: 990px) {
+  .header__inline-menu .header__menu-item {
+    font-family: var(--font-heading-family);
+    text-transform: uppercase;
+    font-weight: 600;
+    font-size: 1.35rem;
+    letter-spacing: 0.07em;
+    transition: color 0.2s ease;
+  }
+
+  .header__inline-menu .header__menu-item:hover,
+  .header__inline-menu .header__menu-item:hover span,
+  .header__inline-menu .header__menu-item:focus span {
+    color: rgb(var(--brand-gold));
+    text-decoration: none;
+  }
+}
+
+/* --- Header: icon polish + gold hover -------------------------------------- */
+.header__icons {
+  gap: 0.4rem;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+/* Size only the search/account icons; the cart icon keeps Dawn's larger
+   4.4rem sizing (its glyph is small within a padded viewBox, so shrinking it
+   made it tiny next to the others). */
+.header__icons .header__icon:not(.header__icon--cart) .icon {
+  width: 2rem;
+  height: 2rem;
+}
+
+.header__icons .header__icon {
+  transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.header__icons .header__icon:hover {
+  color: rgb(var(--brand-gold));
+}
+
+.header__icons .header__icon:active {
+  transform: translateY(1px);
+}
+
+/* Branded cart count badge - smaller, tidy gold pill with a dark number */
+.cart-count-bubble {
+  background-color: rgb(var(--brand-gold));
+  color: #1a1a1a;
+  font-size: 1rem;
+  line-height: 1;
+  min-width: 1.6rem;
+  height: 1.6rem;
+}
+
+/* Bolder, heavier header icons (thicker stroke on the outline glyphs) */
+.header__icons .header__icon .icon {
+  stroke-width: 2;
+}
+
+/* Remove the underline Dawn draws under the active / selected nav item */
+.header__active-menu-item,
+.header__menu-item:hover .header__active-menu-item {
+  text-decoration: none;
+}
+
+/* --- Collection page: centered banner heading ------------------------------ */
+.collection-hero__inner {
+  justify-items: center;
+  text-align: center;
+}
+
+.collection-hero__title {
+  text-align: center;
+}
+
+.collection-hero__description {
+  max-width: 62ch;
+  margin-inline: auto;
+  text-align: center;
+}
+
+/* --- Sale price emphasis: struck compare-at + red current price ------------- */
+.price--on-sale .price-item--sale {
+  color: #c0392b;
+}
+
+/* --- Product card: refined hover - image zoom (above) + soft shadow rise ---- */
+@media (hover: hover) {
+  .card-wrapper .card {
+    transition: box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .card-wrapper:hover .card {
+    box-shadow: 0 22px 44px -26px rgba(26, 22, 18, 0.5);
+  }
+}
+
+/* --- Product card: Add-to-Cart pill (cart icon + text) at the image bottom -- */
+.card-wrapper {
+  position: relative;
+}
+
+/* Overlay the square image area, then push the button to its bottom-center.
+   Works because product images are square (aspect-ratio 1/1) and fill the card. */
+.card-wrapper .quick-add {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  margin: 0;
+  aspect-ratio: 1 / 1;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding-bottom: 1.6rem;
+  z-index: 3;
+  pointer-events: none;
+}
+
+/* let the image link stay clickable; only the button captures clicks */
+.card-wrapper .quick-add > *,
+.card-wrapper .quick-add__submit {
+  pointer-events: auto;
+}
+
+/* Turn Dawn's full-width secondary button into a compact pill with a cart icon */
+.card-wrapper .quick-add__submit {
+  min-width: 0;
+  min-height: 0;
+  width: auto;
+  height: auto;
+  padding: 1.2rem 2.2rem 1.2rem 4.6rem;
+  border-radius: 40px;
+  font-size: 1.4rem;
+  font-weight: 500;
+  color: rgb(var(--color-foreground));
+  background-color: rgb(var(--color-background));
+  background-repeat: no-repeat;
+  background-position: 2rem center;
+  background-size: 1.8rem;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%231a1a1a' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='9' cy='21' r='1'/%3E%3Ccircle cx='20' cy='21' r='1'/%3E%3Cpath d='M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6'/%3E%3C/svg%3E");
+  box-shadow: 0 6px 20px -6px rgba(26, 22, 18, 0.35);
+}
+
+/* Remove Dawn's pseudo border/shadow so the pill stays clean */
+.card-wrapper .quick-add__submit::before,
+.card-wrapper .quick-add__submit::after {
+  display: none;
+}
+
+.card-wrapper .quick-add__submit:hover {
+  color: rgb(var(--color-background));
+  background-color: rgb(var(--color-foreground));
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='9' cy='21' r='1'/%3E%3Ccircle cx='20' cy='21' r='1'/%3E%3Cpath d='M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6'/%3E%3C/svg%3E");
+}
+
+/* Reveal on hover (desktop); always visible on touch */
+@media (hover: hover) and (min-width: 750px) {
+  .card-wrapper .quick-add {
+    opacity: 0;
+    transform: translateY(6px);
+    transition: opacity 0.25s ease, transform 0.25s ease;
+  }
+
+  .card-wrapper:hover .quick-add,
+  .card-wrapper:focus-within .quick-add {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* --- Collection title: smaller + centered above the toolbar ---------------- */
+.collection-hero__title {
+  font-size: 3.4rem;
+  text-align: center;
+}
+
+/* --- Page title (Contact, About, )  centered, same size as collection ---- */
+.main-page-title.page-title {
+  font-size: 3.4rem;
+  text-align: center;
+}
+
+@media screen and (min-width: 750px) {
+  .main-page-title.page-title {
+    font-size: 4rem;
+  }
+}
+
+.collection-hero__inner,
+.collection-hero .collection-hero__text-wrapper {
+  justify-content: center;
+  text-align: center;
+}
+
+@media screen and (min-width: 750px) {
+  .collection-hero__title {
+    font-size: 4rem;
+  }
+}
+
+/* --- Collection filter/sort bar: premium toolbar --------------------------- */
+/* "Filter:" label */
+.facets__heading {
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: rgba(var(--color-foreground), 0.65);
+}
+
+/* Hide only the "Sort by:" label (keep the product count visible) */
+.facet-filters__label,
+label[for='SortBy'],
+label[for='SortBy-mobile'] {
+  display: none !important;
+}
+
+/* Facet toggles -> compact bordered pill buttons, no underline */
+.facets__disclosure .facets__summary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.8rem;
+  border: 1px solid rgba(var(--color-foreground), 0.22);
+  border-radius: 8px;
+  padding: 0.85rem 1.4rem;
+  line-height: 1;
+  text-decoration: none;
+  transition: border-color 0.2s ease, color 0.2s ease;
+}
+
+.facets__disclosure .facets__summary-label {
+  text-decoration: none;
+}
+
+.facets__disclosure .facets__summary:hover,
+.facets__disclosure[open] > .facets__summary {
+  border-color: rgb(var(--color-foreground));
+  color: rgb(var(--color-foreground));
+  text-decoration: none;
+}
+
+.facets__disclosure .facets__summary .icon-caret {
+  position: static;
+  margin: 0;
+  height: 0.6rem;
+}
+/* Dawn draws the sort <select> border via .select:after - no extra border here
+   (adding one created the double outline on hover). */
+
+/* Hide the filter/sort UI on mobile (per request) */
+@media screen and (max-width: 749px) {
+  .mobile-facets__wrapper {
+    display: none !important;
+  }
+}
+
+/* --- Filter drawer: open from the LEFT instead of the right ---------------- */
+.mobile-facets__inner {
+  margin-left: 0;
+  margin-right: auto;
+  border-width: 0 var(--drawer-border-width) 0 0;
+}
+
+.js .disclosure-has-popup:not(.menu-opening) .mobile-facets__inner {
+  transform: translateX(-105vw);
+}
+
+/* --- Filter drawer: brand touches ------------------------------------------ */
+/* Checked checkbox -> gold */
+.mobile-facets__checkbox:checked + .mobile-facets__highlight {
+  background-color: rgb(var(--brand-gold));
+  border-color: rgb(var(--brand-gold));
+}
+
+/* Price range slider -> gold accent */
+.facets__price input[type='range'],
+.mobile-facets input[type='range'] {
+  accent-color: rgb(var(--brand-gold));
+}
+
+/* The drawer's apply button, full width */
+.mobile-facets__footer button[type='submit'],
+.mobile-facets__submit {
+  width: 100%;
+}
+
+/* --- Collection: vertical sidebar  slide-in filter drawer (desktop only;
+   mobile uses Dawn's native mobile-facets drawer) ---------------------------- */
+.collection-filter__toggle {
+  display: none;
+  align-items: center;
+  gap: 0.7rem;
+  border: 1px solid rgba(var(--color-foreground), 0.22);
+  border-radius: 8px;
+  padding: 0.85rem 1.6rem;
+  background: transparent;
+  color: rgb(var(--color-foreground));
+  font-family: inherit;
+  font-size: 1.4rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: border-color 0.2s ease;
+}
+
+.collection-filter__toggle:hover {
+  border-color: rgb(var(--color-foreground));
+}
+
+.collection-filter__icon {
+  width: 1.8rem;
+  height: 1.8rem;
+  flex: none;
+}
+
+/* CSS-only dim - cannot fail to render as long as body.filters-open is set */
+body.filters-open::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.55);
+  z-index: 9998;
+  pointer-events: none;
+}
+
+.collection-filter__close {
+  position: fixed;
+  top: 1.8rem;
+  left: calc(min(90vw, 38rem) - 5rem);
+  width: 3.6rem;
+  height: 3.6rem;
+  border: 0;
+  background: none;
+  font-size: 3rem;
+  line-height: 1;
+  color: rgb(var(--color-foreground));
+  cursor: pointer;
+  opacity: 0;
+  visibility: hidden;
+  z-index: 10000;
+  transition: opacity 0.3s ease, transform 0.4s ease;
+}
+
+.collection-filter__close:hover {
+  transform: rotate(360deg);
+}
+
+/* --- Global: every close (x) button spins 360deg on hover ------------------- */
+.icon-close,
+.modal__toggle-close .icon,
+.quick-add-modal__toggle .icon,
+svg.icon-close {
+  transition: transform 0.4s ease;
+}
+
+button:hover > .icon-close,
+a:hover > .icon-close,
+summary:hover > .icon-close,
+.modal__close-button:hover .icon,
+.quick-add-modal__toggle:hover .icon,
+.mobile-facets__close:hover .icon,
+.drawer__close:hover .icon {
+  transform: rotate(360deg);
+}
+
+body.filters-open .collection-filter__close {
+  opacity: 1;
+  visibility: visible;
+}
+
+@media screen and (min-width: 750px) {
+  .collection-filter__toggle {
+    display: inline-flex;
+  }
+
+  /* Filter left, Sort right; the switcher is absolutely centred on the row */
+  .facets-vertical-form {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 1.4rem;
+  }
+
+  /* margin-right:auto pushes Sort right, keeps Filter left (beats Dawn's flex-end) */
+  .facets-vertical-form .collection-filter__toggle {
+    margin-right: auto;
+  }
+
+  .collection-toolbar__switcher {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    justify-content: center;
+  }
+
+  /* Grid takes full width; the sidebar becomes a fixed slide-in drawer */
+  .facets-vertical {
+    display: block;
+  }
+
+  #main-collection-filters {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: min(90vw, 38rem);
+    background: rgb(var(--color-background));
+    transform: translateX(-100%);
+    transition: transform 0.32s cubic-bezier(0.16, 1, 0.3, 1);
+    z-index: 9999;
+    overflow-y: auto;
+    padding: 3rem 2.4rem 2.4rem;
+    box-shadow: 0 0 50px -10px rgba(26, 22, 18, 0.35);
+  }
+
+  body.filters-open #main-collection-filters {
+    transform: translateX(0);
+  }
+}
+
+/* Summary row (count + active chips) BELOW the toolbar */
+.collection-summary {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1.2rem;
+  /* top/bottom only - must NOT reset .page-width's `margin: 0 auto` centering */
+  margin-top: 2.6rem;
+  margin-bottom: 2.6rem;
+  line-height: 1;
+}
+
+/* Everything on the row shares one line-height so it aligns at equal height */
+.collection-summary .product-count-vertical,
+.collection-summary .product-count__text,
+.collection-summary .active-facets,
+.collection-summary .active-facets__button,
+.collection-summary .active-facets__button-inner {
+  line-height: 1;
+}
+
+/* Only the count drops its heading margin (chips keep their inter-chip spacing) */
+.collection-summary .product-count-vertical,
+.collection-summary .product-count__text {
+  margin: 0;
+}
+
+.collection-summary .product-count-vertical {
+  font-weight: 700;
+  color: rgb(var(--color-foreground));
+  white-space: nowrap;
+}
+
+.collection-summary .product-count-vertical .product-count__text {
+  font-weight: 700;
+}
+
+/* A thin divider between the count and the chips */
+.collection-summary .active-facets-desktop:has(.active-facets__button) {
+  padding-left: 1.2rem;
+  border-left: 1px solid rgba(var(--color-foreground), 0.18);
+}
+
+/* Hide the chips block when no filter is active (keep the count visible) */
+.collection-summary .active-facets-desktop:not(:has(.active-facets__button)) {
+  display: none;
+}
+
+/* Drop Dawn's "Filter:" heading + "Remove all" link - the removable chips speak for themselves */
+.collection-summary .active-facets-vertical-filter {
+  display: none;
+}
+
+.collection-summary .active-facets {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.6rem;
+  width: auto;
+  margin: 0;
+}
+
+/* Dawn gives each chip margin-top:1.5rem + display:block, which drops it below
+   the count. Zero it so the chip aligns on the same line. */
+.collection-summary .active-facets__button {
+  display: inline-flex;
+  align-items: center;
+  margin-top: 0;
+}
+
+/* Chips -> plain text with the x on the LEFT, no box/border */
+.collection-summary .active-facets__button-inner,
+.collection-summary .active-facets__button--light .active-facets__button-inner {
+  display: inline-flex;
+  flex-direction: row-reverse; /* svg (x) is last in markup -> shows first */
+  align-items: center;
+  gap: 0.7rem;
+  min-height: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: rgb(var(--color-foreground));
+  font-weight: 500;
+  box-shadow: none !important; /* kill Dawn's 0.1rem ring (component-facets.css) */
+}
+
+.collection-summary .active-facets__button-inner::before,
+.collection-summary .active-facets__button-inner::after {
+  display: none;
+}
+
+.collection-summary .active-facets__button:hover .active-facets__button-inner {
+  background: transparent;
+  color: rgba(var(--color-foreground), 0.6);
+  box-shadow: none !important;
+}
+
+.collection-summary .active-facets__button-inner .icon-close-small {
+  width: 1.2rem;
+  height: 1.2rem;
+}
+
+/* --- Filter drawer: bold text (uniform, heavy) ----------------------------- */
+#main-collection-filters,
+#main-collection-filters .facets__heading,
+#main-collection-filters .facets__summary,
+#main-collection-filters .facet-checkbox,
+#main-collection-filters .facets__label,
+#main-collection-filters label,
+#main-collection-filters .facets__price,
+#main-collection-filters .price-slider__label,
+#main-collection-filters .facets__selected,
+#main-collection-filters .mobile-facets__label {
+  font-weight: 700;
+}
+
+/* Price slider -> gold accent (native range control) */
+#main-collection-filters input[type='range'],
+#main-collection-filters .facets__price input[type='range'] {
+  accent-color: rgb(var(--brand-gold));
+}
+
+/* --- Drawer: section headings (plain, underlined, no chevron/count) --------- */
+/* Hide the collapse chevron in the vertical drawer */
+#main-collection-filters .facets__disclosure-vertical .icon-caret {
+  display: none;
+}
+
+/* Hide the "(1)" selected-count and the "The highest price is ..." helper text */
+#main-collection-filters .facets__selected {
+  display: none;
+}
+
+/* Underline accent beneath each heading label (Availability / Price) */
+#main-collection-filters .facets__disclosure-vertical > summary > div > span:first-child {
+  display: inline-block;
+  padding-bottom: 0.7rem;
+  border-bottom: 2px solid rgb(var(--brand-brown));
+  font-size: 1.7rem;
+  font-weight: 600;
+}
+
+/* --- Drawer: checkbox -> filled brown box + white check when checked -------- */
+#main-collection-filters .facet-checkbox svg:not(.icon-checkmark) rect {
+  fill: #fff;
+  stroke: rgba(var(--color-foreground), 0.45);
+  transition: fill 0.15s ease, stroke 0.15s ease;
+}
+
+#main-collection-filters .facet-checkbox input[type='checkbox']:checked ~ svg:not(.icon-checkmark) rect {
+  fill: rgb(var(--brand-brown));
+  stroke: rgb(var(--brand-brown));
+}
+
+#main-collection-filters .facet-checkbox input[type='checkbox']:checked ~ .icon-checkmark path {
+  stroke: #fff;
+}
+
+/* --- Price range slider (line design) -------------------------------------- */
+.facets__price--slider {
+  display: block;
+  padding: 1rem 0.5rem 0.5rem;
+}
+
+.facets__price--slider .field,
+.facets__price--slider .field-currency {
+  display: none;
+}
+
+.price-slider {
+  display: block;
+}
+
+.price-slider__track {
+  position: relative;
+  height: 2rem;
+  margin: 0.8rem 0 1rem;
+}
+
+.price-slider__rail {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 0.3rem;
+  transform: translateY(-50%);
+  background: rgba(var(--color-foreground), 0.2);
+  border-radius: 2px;
+}
+
+.price-slider__fill {
+  position: absolute;
+  top: 50%;
+  height: 0.3rem;
+  transform: translateY(-50%);
+  background: rgb(var(--brand-brown));
+  border-radius: 2px;
+}
+
+/* Two overlapping range inputs, native chrome stripped, only the thumbs interactive */
+.price-slider__thumb {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 2rem;
+  margin: 0;
+  background: transparent;
+  pointer-events: none;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.price-slider__thumb:focus {
+  outline: none;
+}
+
+.price-slider__thumb::-webkit-slider-runnable-track {
+  -webkit-appearance: none;
+  background: transparent;
+  border: none;
+  height: 2rem;
+}
+
+.price-slider__thumb::-moz-range-track {
+  background: transparent;
+  border: none;
+  height: 2rem;
+}
+
+.price-slider__thumb::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  pointer-events: auto;
+  margin-top: 0.1rem;
+  width: 1.8rem;
+  height: 1.8rem;
+  border-radius: 50%;
+  background: rgb(var(--brand-brown));
+  border: 2px solid #fff;
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.35);
+  cursor: pointer;
+}
+
+.price-slider__thumb::-moz-range-thumb {
+  pointer-events: auto;
+  width: 1.8rem;
+  height: 1.8rem;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  background: rgb(var(--brand-gold));
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.35);
+  cursor: pointer;
+}
+
+.price-slider__label {
+  display: block;
+  font-size: 1.45rem;
+  font-weight: 700;
+  color: rgb(var(--color-foreground));
+}
+
+/* Explicit apply button (matches the target drawer) */
+.price-slider__apply {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 1.6rem;
+  padding: 1rem 2.6rem;
+  border: 1.5px solid rgb(var(--color-foreground));
+  border-radius: 0;
+  background: transparent;
+  color: rgb(var(--color-foreground));
+  font-family: inherit;
+  font-size: 1.3rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.price-slider__apply:hover {
+  background: rgb(var(--brand-brown));
+  border-color: rgb(var(--brand-brown));
+  color: #fff;
+}
+
+/* --- Collection: grid-density switcher ------------------------------------- */
+.grid-switcher-bar {
+  display: flex;
+  justify-content: center;
+  margin: 0 auto 2.6rem;
+}
+
+.grid-switcher {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.grid-switcher__btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 3.4rem;
+  height: 3.4rem;
+  padding: 0;
+  border: 1px solid rgba(var(--color-foreground), 0.18);
+  border-radius: 8px;
+  background: transparent;
+  color: rgba(var(--color-foreground), 0.65);
+  cursor: pointer;
+  transition: border-color 0.2s ease, color 0.2s ease, background-color 0.2s ease;
+}
+
+.grid-switcher__btn:hover {
+  border-color: rgb(var(--brand-gold));
+  color: rgb(var(--color-foreground));
+}
+
+.grid-switcher__btn[aria-pressed='true'] {
+  border-color: rgb(var(--brand-gold));
+  background: rgb(var(--brand-gold));
+  color: #fff;
+}
+
+.grid-switcher__icon {
+  display: inline-flex;
+  gap: 1.5px;
+  width: 1.8rem;
+  height: 1.4rem;
+}
+
+.grid-switcher__icon span {
+  flex: 1;
+  background: currentColor;
+  border-radius: 1px;
+}
+
+/* List view (1 column) -> stacked horizontal bars */
+.grid-switcher__icon--1 {
+  flex-direction: column;
+  gap: 2.5px;
+}
+
+/* --- Collection: custom styled sort dropdown ------------------------------- */
+.sort-select {
+  position: relative;
+  display: inline-block;
+}
+
+/* The native <select> is always replaced by .sort-select - hide it unconditionally
+   so it can never flash back while Dawn re-renders the .sorting block */
+.sort-select__native-hidden,
+.facets-vertical-sort .facet-filters__field > .select {
+  display: none !important;
+}
+
+.sort-select__button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.6rem;
+  min-width: 22rem;
+  padding: 1.2rem 2rem;
+  border: 1px solid rgba(var(--color-foreground), 0.22);
+  border-radius: 8px;
+  background: rgb(var(--color-background));
+  color: rgb(var(--color-foreground));
+  font-family: inherit;
+  font-size: 1.6rem;
+  font-weight: 500;
+  line-height: 1;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: border-color 0.2s ease;
+}
+
+.sort-select__button:hover,
+.sort-select.is-open .sort-select__button {
+  border-color: rgb(var(--color-foreground));
+}
+
+.sort-select__caret {
+  width: 1rem;
+  height: 0.6rem;
+  flex: none;
+  transition: transform 0.2s ease;
+}
+
+.sort-select.is-open .sort-select__caret {
+  transform: rotate(180deg);
+}
+
+.sort-select__panel {
+  position: absolute;
+  top: calc(100% + 1rem);
+  right: 0;
+  min-width: 100%;
+  width: max-content;
+  max-width: 32rem;
+  max-height: 34rem;
+  overflow-y: auto;
+  padding: 0.5rem 0;
+  background: rgb(var(--color-background));
+  border: 1px solid rgba(var(--color-foreground), 0.1);
+  border-radius: 12px;
+  box-shadow: 0 20px 55px -14px rgba(26, 22, 18, 0.4);
+  z-index: 60;
+}
+
+/* Caret pointer that ties the panel to the trigger */
+.sort-select__panel::before {
+  content: "";
+  position: absolute;
+  top: -0.7rem;
+  right: 3.4rem;
+  width: 1.4rem;
+  height: 1.4rem;
+  background: rgb(var(--color-background));
+  border-left: 1px solid rgba(var(--color-foreground), 0.1);
+  border-top: 1px solid rgba(var(--color-foreground), 0.1);
+  transform: rotate(45deg);
+}
+
+.sort-select__option {
+  display: block;
+  width: 100%;
+  padding: 1.15rem 2.2rem;
+  border: 0;
+  background: transparent;
+  color: rgb(var(--color-foreground));
+  font-family: inherit;
+  font-size: 1.5rem;
+  font-weight: 500;
+  text-align: left;
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.sort-select__option:hover {
+  background: rgba(var(--brand-gold), 0.1);
+}
+
+.sort-select__option.is-selected {
+  background: rgba(var(--brand-gold), 0.14);
+  color: rgb(var(--brand-brown));
+  font-weight: 600;
+}
+
+/* Custom scrollbar to match */
+.sort-select__panel::-webkit-scrollbar {
+  width: 8px;
+}
+.sort-select__panel::-webkit-scrollbar-track {
+  background: transparent;
+}
+.sort-select__panel::-webkit-scrollbar-thumb {
+  background: rgba(var(--color-foreground), 0.35);
+  border-radius: 4px;
+}
+
+/* --- Product card: smaller, cleaner title (clamp to 2 lines) --------------- */
+.card-wrapper .card__heading,
+.card-wrapper .card__heading.h5 {
+  font-size: 1.35rem;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+.card__information .card__heading a {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* ==========================================================================
+   Product page: conversion / social-proof widgets
+   ========================================================================== */
+.product-urgency {
+  display: flex;
+  flex-direction: column;
+  gap: 1.4rem;
+  margin: 1.8rem 0 0.6rem;
+}
+
+.product-urgency__line {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  margin: 0;
+  font-size: 1.5rem;
+  color: rgb(var(--color-foreground));
+}
+
+.product-urgency__line strong {
+  font-weight: 700;
+}
+
+.product-urgency__icon {
+  width: 2rem;
+  height: 2rem;
+  flex: none;
+  color: rgb(var(--brand-brown));
+}
+
+/* Rotating "just ordered" bar */
+.product-urgency__order {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.6rem 2rem;
+  border-radius: 8px;
+  background: #111;
+  color: #fff;
+  font-size: 1.5rem;
+  opacity: 0;
+  transform: translateY(0.6rem);
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+.product-urgency__order.is-in {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.product-urgency__order-heart {
+  font-size: 1.7rem;
+  line-height: 1;
+}
+
+/* Low-stock urgency + progress bar */
+.product-urgency__stock {
+  margin-top: 0.4rem;
+}
+
+.product-urgency__stock-text {
+  margin: 0 0 1rem;
+  text-align: center;
+  font-size: 1.6rem;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: rgb(var(--color-foreground));
+}
+
+.product-urgency__stock-text strong {
+  color: #c0392b;
+  font-weight: 800;
+}
+
+.stock-bar {
+  height: 1rem;
+  border-radius: 999px;
+  background: rgba(var(--color-foreground), 0.1);
+  overflow: hidden;
+}
+
+.stock-bar__fill {
+  display: block;
+  height: 100%;
+  width: 30%;
+  border-radius: 999px;
+  background-image: repeating-linear-gradient(
+    45deg,
+    rgb(var(--brand-brown-mid)),
+    rgb(var(--brand-brown-mid)) 8px,
+    rgb(var(--brand-gold)) 8px,
+    rgb(var(--brand-gold)) 16px
+  );
+  background-size: 22px 22px;
+  animation: stock-bar-move 1s linear infinite;
+  transition: width 0.6s ease;
+}
+
+@keyframes stock-bar-move {
+  from { background-position: 0 0; }
+  to { background-position: 22px 0; }
+}
+
+/* Circular trust badges */
+.product-trust-circles {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 1.2rem;
+  margin: 1.4rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.product-trust-circles li {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.7rem;
+  flex: 1 1 0;
+  min-width: 7rem;
+  text-align: center;
+}
+
+.product-trust-circles__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 5.2rem;
+  height: 5.2rem;
+  border-radius: 50%;
+  background: rgb(var(--brand-brown-mid));
+  color: #fff;
+  transition: transform 0.25s ease, background-color 0.25s ease;
+}
+
+.product-trust-circles li:hover .product-trust-circles__icon {
+  background: rgb(var(--brand-gold));
+  transform: translateY(-3px);
+}
+
+.product-trust-circles__icon svg {
+  width: 2.4rem;
+  height: 2.4rem;
+}
+
+.product-trust-circles__label {
+  font-size: 1.2rem;
+  font-weight: 500;
+  color: rgba(var(--color-foreground), 0.75);
+}
+
+/* --- Product page: brand colours on the interactive controls --------------- */
+/* Selected variant (pill buttons / swatches) -> brown border + gold tint */
+.product__info-container .product-form__input input[type='radio']:checked + label,
+.product__info-container fieldset input[type='radio']:checked + label {
+  border-color: rgb(var(--brand-brown));
+  background: rgba(var(--brand-gold), 0.14);
+  color: rgb(var(--brand-brown));
+}
+
+/* Selected colour swatch ring -> brown */
+.product__info-container .product-form__input--swatch input:checked + label {
+  outline-color: rgb(var(--brand-brown));
+  box-shadow: 0 0 0 0.2rem rgb(var(--brand-brown));
+}
+
+/* Variant dropdown + quantity focus -> brown */
+.product__info-container .select__select:focus,
+.product__info-container .quantity__input:focus,
+.product__info-container .quantity:focus-within {
+  border-color: rgb(var(--brand-brown));
+}
+
+/* Quantity stepper +/- hover -> gold */
+.product__info-container .quantity__button:hover {
+  color: rgb(var(--brand-gold));
+}
+
+/* Add to cart is gold via the color scheme (site-wide). Here we only add the
+   periodic attention vibrate every ~4s and a slightly deeper gold on hover. */
+.product__info-container .product-form__submit {
+  animation: atc-vibrate 4s ease-in-out infinite;
+}
+
+.product__info-container .product-form__submit:hover {
+  --color-button: 176, 133, 46;
+}
+
+/* Buy it now (unbranded dynamic checkout) shares --color-button with the ATC,
+   so both went gold. Force it to dark brown for a gold + brown combo that
+   stays distinct in normal AND hover states. */
+.product__info-container .shopify-payment-button__button--unbranded {
+  --color-button: 42, 33, 25; /* #2A2119 dark brown */
+  --color-button-text: 255, 255, 255;
+}
+
+.product__info-container .shopify-payment-button__button--unbranded:hover {
+  --color-button: 61, 50, 38; /* #3D3226 slightly lighter brown on hover */
+}
+
+@keyframes atc-vibrate {
+  0%, 84%, 100% { transform: translateX(0) rotate(0); }
+  86% { transform: translateX(-2px) rotate(-0.6deg); }
+  88% { transform: translateX(2px) rotate(0.6deg); }
+  90% { transform: translateX(-2px) rotate(-0.4deg); }
+  92% { transform: translateX(2px) rotate(0.4deg); }
+  94% { transform: translateX(-1px); }
+  96% { transform: translateX(1px); }
+  98% { transform: translateX(0); }
+}
+
+/* Sale price in red, compare-at struck through */
+.product__info-container .price__sale .price-item--sale,
+.product__info-container .price .price-item--sale {
+  color: #c0392b;
+  font-weight: 700;
+}
+
+.product__info-container .price__sale .price-item--regular {
+  text-decoration: line-through;
+  opacity: 0.6;
+}
+
+/* Sale badge (Dawn renders it in the price block) -> brown pill */
+.product__info-container .price__badge-sale,
+.product__media-list .product-media__sale-badge {
+  background: rgb(var(--brand-brown));
+  color: #fff;
+}
+
+/* Gallery Sale badge overlay (added in main-product.liquid) */
+.product__media-wrapper {
+  position: relative;
+}
+
+.product-media__sale-badge {
+  position: absolute;
+  top: 1.4rem;
+  right: 1.4rem;
+  z-index: 2;
+  padding: 0.5rem 1.4rem;
+  border-radius: 6px;
+  background: rgb(var(--brand-brown));
+  color: #fff;
+  font-size: 1.3rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+/* Gallery: active thumbnail -> gold ring (Dawn defaults to black) */
+.product__media-wrapper .thumbnail[aria-current] {
+  box-shadow: 0 0 0 0.2rem rgb(var(--brand-gold));
+  border-color: rgb(var(--brand-gold));
+}
+
+.product__media-wrapper .thumbnail:hover {
+  border-color: rgb(var(--brand-gold));
+}
+
+/* Gallery: slider arrows -> dark overlay squares */
+.product__media-list ~ .slider-buttons .slider-button,
+.product-media-modal__content .slider-button {
+  background: rgba(17, 17, 17, 0.75);
+  color: #fff;
+  border-radius: 6px;
+  width: 4rem;
+  height: 4rem;
+}
+
+/* Keep the EMPTY cart drawer as a right-side 40rem panel (never centered) */
+cart-drawer.is-empty .drawer__inner {
+  width: 40rem;
+  max-width: calc(100vw - 3rem);
+  justify-self: end;
+  margin-left: auto;
+}
+
+/* --- Footer: even, roomy 4-column distribution ----------------------------- */
+@media screen and (min-width: 990px) {
+  .footer__blocks-wrapper.grid {
+    column-gap: 5rem;
+    align-items: start;
+  }
+
+  /* Equal-width columns and keep the brand text from crowding the next column */
+  .footer__blocks-wrapper > .footer-block {
+    width: auto;
+    max-width: none;
+  }
+
+  .footer-block .footer-block__details-content {
+    max-width: 34rem;
+  }
+}
+
 /* --- Accessibility: honour reduced-motion preferences ---------------------- */
 @media (prefers-reduced-motion: reduce) {
   .card__media img,
@@ -116,7 +1396,8 @@ summary {
   summary,
   .header__submenu,
   .mega-menu__content,
-  .free-shipping-bar__progress {
+  .free-shipping-bar__progress,
+  .card-wrapper .quick-add {
     transition: none !important;
   }
 
@@ -124,4 +1405,78 @@ summary {
   .card-wrapper:hover .card .media img {
     transform: none !important;
   }
+
+  /* Stop the barber-pole stock bar, order-bar slide, ATC vibrate */
+  .stock-bar__fill,
+  .product__info-container .product-form__submit {
+    animation: none !important;
+  }
+  .product-urgency__order {
+    transition: none !important;
+  }
 }
+
+/* --- Product page: aesthetic polish ---------------------------------------- */
+/* Roomier, tighter product title */
+.product__info-container .product__title,
+.product__info-container .product__title h1 {
+  font-size: 2.8rem;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+}
+
+/* Price a bit larger and confident */
+.product__info-container .price {
+  font-size: 2rem;
+}
+
+/* Hairline dividers to separate the info into clean zones */
+.product__info-container .product-urgency {
+  padding-top: 1.8rem;
+  border-top: 1px solid rgba(var(--color-foreground), 0.1);
+}
+
+.product__info-container .product-trust-circles {
+  padding-top: 1.8rem;
+  margin-top: 1.8rem;
+  border-top: 1px solid rgba(var(--color-foreground), 0.1);
+}
+
+/* Quantity + buy buttons: consistent rounded, comfortable height */
+.product__info-container .quantity,
+.product__info-container .product-form__submit,
+.product__info-container .shopify-payment-button__button {
+  border-radius: 10px;
+  min-height: 5.2rem;
+}
+
+/* Collapsible tabs: cleaner rows */
+.product__info-container .product__accordion .summary__title,
+.product__info-container .accordion__title {
+  font-weight: 600;
+}
+
+/* ==========================================================================
+   Cart drawer / page: sale prices + brand checkout
+   ========================================================================== */
+/* Sale price -> red, compare-at struck + faded (matches the product page) */
+.cart-item__discounted-prices .cart-item__final-price {
+  color: #c0392b;
+  font-weight: 700;
+}
+
+.cart-item__old-price {
+  opacity: 0.55;
+}
+
+/* Checkout -> brown (final-purchase action, same as "Buy it now") */
+.cart__checkout-button,
+.cart__ctas .cart__checkout-button {
+  --color-button: 42, 33, 25; /* #2A2119 brown */
+  --color-button-text: 255, 255, 255;
+}
+
+.cart__checkout-button:hover {
+  --color-button: 61, 50, 38; /* #3D3226 */
+}
+

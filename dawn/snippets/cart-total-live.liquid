@@ -1,0 +1,81 @@
+{%- comment -%}
+  Keeps the header cart total ([data-cart-total]) in sync with the live cart on
+  every page. Dawn re-renders the cart-count bubble via the Section Rendering
+  API, but the price total is a custom addition, so we update it ourselves.
+
+  Mechanism: wrap window.fetch and, whenever a cart-mutation endpoint
+  (/cart/add|change|update|clear) resolves successfully, re-read /cart.js and
+  reprint the total using the shop's money format. This catches every add path
+  — product form, quick-add, cart drawer, cart page — without depending on
+  Dawn's internal events.
+{%- endcomment -%}
+<script>
+  (function () {
+    if (window.__cartTotalLive) return;
+    window.__cartTotalLive = true;
+
+    var moneyFormat = {{ shop.money_format | json }};
+
+    function formatWithDelimiters(number, precision, thousands, decimal) {
+      precision = precision == null ? 2 : precision;
+      thousands = thousands == null ? ',' : thousands;
+      decimal = decimal == null ? '.' : decimal;
+      if (isNaN(number) || number == null) return '0';
+      number = (number / 100.0).toFixed(precision);
+      var parts = number.split('.');
+      var dollars = parts[0].replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1' + thousands);
+      var cents = parts[1] ? decimal + parts[1] : '';
+      return dollars + cents;
+    }
+
+    function formatMoney(cents) {
+      var value = '';
+      var match = moneyFormat.match(/\{\{\s*(\w+)\s*\}\}/);
+      var placeholder = match ? match[1] : 'amount';
+      switch (placeholder) {
+        case 'amount': value = formatWithDelimiters(cents, 2); break;
+        case 'amount_no_decimals': value = formatWithDelimiters(cents, 0); break;
+        case 'amount_with_comma_separator': value = formatWithDelimiters(cents, 2, '.', ','); break;
+        case 'amount_no_decimals_with_comma_separator': value = formatWithDelimiters(cents, 0, '.', ','); break;
+        case 'amount_with_space_separator': value = formatWithDelimiters(cents, 2, ' ', '.'); break;
+        case 'amount_with_apostrophe_separator': value = formatWithDelimiters(cents, 2, "'", '.'); break;
+        default: value = formatWithDelimiters(cents, 2);
+      }
+      return moneyFormat.replace(/\{\{\s*\w+\s*\}\}/, value);
+    }
+
+    function root() {
+      return (window.Shopify && Shopify.routes && Shopify.routes.root) || '/';
+    }
+
+    var pending = false;
+    function refresh() {
+      if (pending) return;
+      pending = true;
+      fetch(root() + 'cart.js', { headers: { Accept: 'application/json' }, credentials: 'same-origin' })
+        .then(function (r) { return r.json(); })
+        .then(function (cart) {
+          var els = document.querySelectorAll('[data-cart-total]');
+          for (var i = 0; i < els.length; i++) els[i].textContent = formatMoney(cart.total_price);
+        })
+        .catch(function () {})
+        .then(function () { pending = false; });
+    }
+
+    var CART_MUTATION = /\/cart\/(add|change|update|clear)(\.js)?(\?|$)/;
+    var nativeFetch = window.fetch;
+    if (typeof nativeFetch === 'function') {
+      window.fetch = function () {
+        var input = arguments[0];
+        var url = input && input.url ? input.url : String(input);
+        var promise = nativeFetch.apply(this, arguments);
+        if (CART_MUTATION.test(url)) {
+          promise.then(function (res) {
+            if (res && res.ok) setTimeout(refresh, 60);
+          }).catch(function () {});
+        }
+        return promise;
+      };
+    }
+  })();
+</script>

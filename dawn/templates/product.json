@@ -49,6 +49,12 @@
           "type": "price",
           "settings": {}
         },
+        "urgency": {
+          "type": "custom_liquid",
+          "settings": {
+            "custom_liquid": "{% render 'product-urgency' %}"
+          }
+        },
         "variant_picker": {
           "type": "variant_picker",
           "settings": {
@@ -107,17 +113,13 @@
         }
       },
       "block_order": [
-        "vendor",
         "title",
-        "rating",
         "price",
+        "urgency",
         "variant_picker",
         "quantity_selector",
         "buy_buttons",
-        "trust_badges",
         "description",
-        "tab_shipping",
-        "tab_returns",
         "event_bridge_v1_discord_tools_connect_awU3xE",
         "share"
       ],

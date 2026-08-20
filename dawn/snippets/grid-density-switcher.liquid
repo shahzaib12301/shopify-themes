@@ -1,0 +1,66 @@
+{%- comment -%}
+  Grid density switcher — lets shoppers choose how many products per row.
+  Params:
+    default_cols: the section's columns_desktop (used to highlight when no preference saved)
+  Swaps the `grid--N-col-desktop` class on #product-grid and remembers the choice.
+{%- endcomment -%}
+<grid-switcher class="grid-switcher" data-grid-id="product-grid" data-default="{{ default_cols | default: 4 }}">
+  {%- for n in (1..6) -%}
+    <button
+      type="button"
+      class="grid-switcher__btn"
+      data-cols="{{ n }}"
+      aria-pressed="false"
+      aria-label="{{ n }} products per row"
+    >
+      <span class="grid-switcher__icon grid-switcher__icon--{{ n }}" aria-hidden="true">
+        {%- if n == 1 -%}
+          {%- comment -%} list view → three stacked horizontal bars {%- endcomment -%}
+          <span></span><span></span><span></span>
+        {%- else -%}
+          {%- for i in (1..n) -%}<span></span>{%- endfor -%}
+        {%- endif -%}
+      </span>
+    </button>
+  {%- endfor -%}
+</grid-switcher>
+<script>
+  if (!customElements.get('grid-switcher')) {
+    customElements.define('grid-switcher', class extends HTMLElement {
+      connectedCallback() {
+        this.gridId = this.dataset.gridId || 'product-grid';
+        this.storeKey = 'topkart:gridCols';
+        this.buttons = Array.from(this.querySelectorAll('.grid-switcher__btn'));
+        this.buttons.forEach((b) =>
+          b.addEventListener('click', () => this.setCols(b.dataset.cols))
+        );
+        this.apply();
+        const container = document.getElementById('ProductGridContainer');
+        if (container) {
+          this.observer = new MutationObserver(() => this.apply());
+          this.observer.observe(container, { childList: true, subtree: true });
+        }
+      }
+      disconnectedCallback() {
+        if (this.observer) this.observer.disconnect();
+      }
+      saved() {
+        try { return localStorage.getItem(this.storeKey); } catch (e) { return null; }
+      }
+      setCols(n) {
+        try { localStorage.setItem(this.storeKey, n); } catch (e) {}
+        this.apply();
+      }
+      apply() {
+        const cols = this.saved() || this.dataset.default;
+        const grid = document.getElementById(this.gridId);
+        if (grid && this.saved()) {
+          grid.className = grid.className.replace(/grid--\d-col-desktop/g, 'grid--' + cols + '-col-desktop');
+        }
+        this.buttons.forEach((b) =>
+          b.setAttribute('aria-pressed', String(b.dataset.cols === cols))
+        );
+      }
+    });
+  }
+</script>

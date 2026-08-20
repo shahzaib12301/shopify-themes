@@ -1,0 +1,137 @@
+{%- comment -%}
+  Conversion / social-proof widgets for the product page (buckup-style):
+  live viewers, recent sales, a rotating "just ordered" bar, a low-stock
+  urgency bar (real inventory when tracked, otherwise a sensible fallback),
+  and a row of circular trust badges. Injected via a custom_liquid block.
+
+  Implemented as a <product-urgency> custom element so it re-initialises when
+  Dawn swaps the product HTML (combined listings / full-page swaps) and clears
+  its timers on disconnect — an inline <script> would neither re-run nor clean up.
+{%- endcomment -%}
+{%- liquid
+  assign variant = product.selected_or_first_available_variant
+  assign inv = variant.inventory_quantity
+  assign tracked = false
+  if variant.inventory_management == 'shopify' and inv > 0
+    assign tracked = true
+  endif
+-%}
+<product-urgency class="product-urgency" data-inv="{{ inv }}" data-tracked="{{ tracked }}">
+  <p class="product-urgency__line">
+    <svg viewBox="0 0 24 24" aria-hidden="true" class="product-urgency__icon">
+      <path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12z" fill="none" stroke="currentColor" stroke-width="1.7"/>
+      <circle cx="12" cy="12" r="3" fill="none" stroke="currentColor" stroke-width="1.7"/>
+    </svg>
+    <span><strong data-viewers>27</strong> People</span>&nbsp;are viewing this right now
+  </p>
+
+  <p class="product-urgency__line">
+    <svg viewBox="0 0 24 24" aria-hidden="true" class="product-urgency__icon">
+      <path d="M12 2s5 4.5 5 9a5 5 0 0 1-10 0c0-1.7.8-3.2 1.7-4.3C9 8 10 9 10 10c1.5 0 1-3 2-8z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
+    </svg>
+    <strong data-sold>25</strong>&nbsp;sold in last&nbsp;<strong>8 hours</strong>
+  </p>
+
+  <div class="product-urgency__order" data-recent-order hidden>
+    <span class="product-urgency__order-heart">💗</span>
+    <span data-order-text></span>
+  </div>
+
+  <div class="product-urgency__stock" data-stock hidden>
+    <p class="product-urgency__stock-text">
+      HURRY! ONLY <strong data-stock-count></strong> LEFT IN STOCK.
+    </p>
+    <div class="stock-bar"><span class="stock-bar__fill" data-stock-fill></span></div>
+  </div>
+
+  <ul class="product-trust-circles" role="list">
+    <li>
+      <span class="product-trust-circles__icon">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M1 4h13v11H1z M14 8h4l3 3v4h-7z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><circle cx="5.5" cy="17.5" r="1.8" fill="none" stroke="currentColor" stroke-width="1.6"/><circle cx="17.5" cy="17.5" r="1.8" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>
+      </span>
+      <span class="product-trust-circles__label">Fast Shipping</span>
+    </li>
+    <li>
+      <span class="product-trust-circles__icon">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l8 3v6c0 5-3.5 8.5-8 11-4.5-2.5-8-6-8-11V5z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M8.5 12l2.5 2.5 4.5-5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </span>
+      <span class="product-trust-circles__label">Quality Guarantee</span>
+    </li>
+    <li>
+      <span class="product-trust-circles__icon">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M12 7v5l3.5 2" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </span>
+      <span class="product-trust-circles__label">Easy Returns</span>
+    </li>
+    <li>
+      <span class="product-trust-circles__icon">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="10" width="16" height="11" rx="2" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M8 10V7a4 4 0 0 1 8 0v3" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>
+      </span>
+      <span class="product-trust-circles__label">Secure Checkout</span>
+    </li>
+  </ul>
+</product-urgency>
+
+<script>
+  if (!customElements.get('product-urgency')) {
+    customElements.define('product-urgency', class extends HTMLElement {
+      connectedCallback() {
+        if (this.__init) return;
+        this.__init = true;
+        this.timers = [];
+        var rand = function (min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; };
+
+        // Live viewers — believable start, gentle drift
+        var viewersEl = this.querySelector('[data-viewers]');
+        if (viewersEl) {
+          var viewers = rand(18, 42);
+          viewersEl.textContent = viewers;
+          this.timers.push(setInterval(function () {
+            viewers = Math.max(9, Math.min(60, viewers + rand(-2, 3)));
+            viewersEl.textContent = viewers;
+          }, 6000));
+        }
+
+        // Sold in last 8 hours
+        var soldEl = this.querySelector('[data-sold]');
+        if (soldEl) soldEl.textContent = rand(12, 47);
+
+        // Low-stock urgency (real inventory when tracked, else a fallback)
+        var stock = this.querySelector('[data-stock]');
+        var tracked = this.getAttribute('data-tracked') === 'true';
+        var inv = parseInt(this.getAttribute('data-inv'), 10);
+        if (!tracked || isNaN(inv) || inv <= 0) inv = rand(8, 19);
+        if (stock && inv <= 40) {
+          this.querySelector('[data-stock-count]').textContent = inv;
+          var pct = Math.max(8, Math.min(100, Math.round((inv / 40) * 100)));
+          this.querySelector('[data-stock-fill]').style.width = pct + '%';
+          stock.hidden = false;
+        }
+
+        // Rotating "just ordered" bar
+        var order = this.querySelector('[data-recent-order]');
+        var orderText = this.querySelector('[data-order-text]');
+        if (order && orderText) {
+          var names = ['Umar', 'Ayesha', 'Bilal', 'Fatima', 'Hassan', 'Zainab', 'Ali', 'Sana', 'Usman', 'Hira'];
+          var cities = ['Hyderabad', 'Karachi', 'Lahore', 'Islamabad', 'Faisalabad', 'Multan', 'Rawalpindi', 'Peshawar', 'Quetta', 'Sialkot'];
+          var show = function () {
+            orderText.innerHTML = '<strong>' + names[rand(0, names.length - 1)] + '</strong> just ordered this from ' + cities[rand(0, cities.length - 1)];
+            order.hidden = false;
+            order.classList.add('is-in');
+          };
+          this.timers.push(setTimeout(show, 2500));
+          this.timers.push(setInterval(function () {
+            order.classList.remove('is-in');
+            setTimeout(show, 500);
+          }, 8000));
+        }
+      }
+
+      disconnectedCallback() {
+        (this.timers || []).forEach(function (t) { clearInterval(t); clearTimeout(t); });
+        this.timers = [];
+        this.__init = false;
+      }
+    });
+  }
+</script>

@@ -1,3 +1,11 @@
+<div class="price-slider" data-price-slider hidden>
+  <div class="price-slider__track">
+    <span class="price-slider__rail"></span>
+    <span class="price-slider__fill"></span>
+  </div>
+  <output class="price-slider__label"></output>
+</div>
+
 <span class="field-currency">{{ cart.currency.symbol }}</span>
 
 <div class="field">
@@ -43,3 +51,86 @@
     {{- 'products.facets.to' | t -}}
   </label>
 </div>
+
+<script>
+  (function () {
+    if (window.__priceSliderInit) return;
+    window.__priceSliderInit = true;
+    var sym = {{ cart.currency.symbol | json }};
+    var num = function (v) { return Math.round(parseFloat(String(v).replace(/,/g, '')) || 0); };
+    var fmt = function (v) {
+      return sym + Number(v).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    };
+
+    function build(facet) {
+      if (facet.dataset.sliderReady) return;
+      var fields = facet.querySelectorAll('.field__input');
+      var slider = facet.querySelector('[data-price-slider]');
+      if (fields.length < 2 || !slider) return;
+      facet.dataset.sliderReady = '1';
+      facet.classList.add('facets__price--slider');
+      slider.hidden = false;
+
+      var minInput = fields[0], maxInput = fields[1];
+      var max = num(maxInput.getAttribute('data-max')) || 1000;
+      var curMin = num(minInput.value) || 0;
+      var curMax = num(maxInput.value) || max;
+
+      var track = slider.querySelector('.price-slider__track');
+      var fill = slider.querySelector('.price-slider__fill');
+      var label = slider.querySelector('.price-slider__label');
+
+      var tMin = document.createElement('input');
+      tMin.type = 'range'; tMin.className = 'price-slider__thumb price-slider__thumb--min';
+      tMin.min = 0; tMin.max = max; tMin.value = curMin; tMin.setAttribute('aria-label', 'Minimum price');
+      var tMax = document.createElement('input');
+      tMax.type = 'range'; tMax.className = 'price-slider__thumb price-slider__thumb--max';
+      tMax.min = 0; tMax.max = max; tMax.value = curMax; tMax.setAttribute('aria-label', 'Maximum price');
+      track.appendChild(tMin);
+      track.appendChild(tMax);
+
+      var paint = function () {
+        var a = Math.min(+tMin.value, +tMax.value), b = Math.max(+tMin.value, +tMax.value);
+        fill.style.left = (a / max * 100) + '%';
+        fill.style.right = (100 - b / max * 100) + '%';
+        label.textContent = 'Price: ' + fmt(a) + ' — ' + fmt(b);
+      };
+      var commit = function () {
+        var a = Math.min(+tMin.value, +tMax.value), b = Math.max(+tMin.value, +tMax.value);
+        minInput.value = a > 0 ? a : '';
+        maxInput.value = b < max ? b : '';
+        minInput.dispatchEvent(new Event('input', { bubbles: true }));
+        maxInput.dispatchEvent(new Event('input', { bubbles: true }));
+        // Apply + close the filter drawer
+        document.body.classList.remove('filters-open');
+        var toggle = document.querySelector('.collection-filter__toggle');
+        if (toggle) toggle.setAttribute('aria-expanded', 'false');
+      };
+      // Dragging only repaints; applying happens on the explicit FILTER button
+      tMin.addEventListener('input', paint);
+      tMax.addEventListener('input', paint);
+
+      var applyBtn = facet.querySelector('.price-slider__apply');
+      if (!applyBtn) {
+        applyBtn = document.createElement('button');
+        applyBtn.type = 'button';
+        applyBtn.className = 'price-slider__apply';
+        applyBtn.textContent = 'Filter';
+        slider.appendChild(applyBtn);
+      }
+      applyBtn.addEventListener('click', commit);
+      paint();
+    }
+
+    var initAll = function () {
+      document.querySelectorAll('.facets__price').forEach(build);
+    };
+    document.addEventListener('DOMContentLoaded', initAll);
+    initAll();
+    // Rebuild after Dawn re-renders the grid or the facet sidebar (AJAX / back-forward)
+    ['ProductGridContainer', 'main-collection-filters', 'main-search-filters'].forEach(function (id) {
+      var el = document.getElementById(id);
+      if (el) new MutationObserver(initAll).observe(el, { childList: true, subtree: true });
+    });
+  })();
+</script>

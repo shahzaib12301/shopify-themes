@@ -1,9 +1,9 @@
 [
   {
     "name": "theme_info",
-    "theme_name": "Dawn",
+    "theme_name": "TopKart",
     "theme_version": "15.0.0",
-    "theme_author": "Shopify",
+    "theme_author": "TopKart.pk",
     "theme_documentation_url": "https://help.shopify.com/manual/online-store/themes",
     "theme_support_url": "https://support.shopify.com/"
   },
@@ -1472,7 +1472,7 @@
         "type": "checkbox",
         "id": "show_free_shipping_bar",
         "label": "Show free shipping progress bar",
-        "default": true
+        "default": false
       },
       {
         "type": "text",

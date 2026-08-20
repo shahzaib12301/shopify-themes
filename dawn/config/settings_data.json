@@ -9,15 +9,15 @@
  */
 {
   "current": {
-    "logo_width": 90,
+    "logo_width": 150,
     "type_header_font": "poppins_n6",
     "heading_scale": 110,
     "type_body_font": "assistant_n4",
     "body_scale": 100,
     "page_width": 1200,
     "spacing_sections": 48,
-    "spacing_grid_horizontal": 8,
-    "spacing_grid_vertical": 8,
+    "spacing_grid_horizontal": 16,
+    "spacing_grid_vertical": 24,
     "animations_reveal_on_scroll": true,
     "animations_hover_elements": "vertical-lift",
     "buttons_border_thickness": 1,
@@ -101,7 +101,7 @@
     "drawer_shadow_horizontal_offset": 0,
     "drawer_shadow_vertical_offset": 4,
     "drawer_shadow_blur": 5,
-    "badge_position": "bottom left",
+    "badge_position": "top left",
     "badge_corner_radius": 40,
     "sale_badge_color_scheme": "scheme-4",
     "sold_out_badge_color_scheme": "scheme-3",
@@ -154,9 +154,9 @@
           "background": "#FFFFFF",
           "background_gradient": "",
           "text": "#1A1A1A",
-          "button": "#1A1A1A",
-          "button_label": "#FFFFFF",
-          "secondary_button_label": "#1A1A1A",
+          "button": "#C89B3C",
+          "button_label": "#2A2119",
+          "secondary_button_label": "#3D3226",
           "shadow": "#1A1A1A"
         }
       },
@@ -165,19 +165,19 @@
           "background": "#F7F5F1",
           "background_gradient": "",
           "text": "#1A1A1A",
-          "button": "#1A1A1A",
-          "button_label": "#F7F5F1",
-          "secondary_button_label": "#1A1A1A",
+          "button": "#C89B3C",
+          "button_label": "#2A2119",
+          "secondary_button_label": "#3D3226",
           "shadow": "#1A1A1A"
         }
       },
       "scheme-3": {
         "settings": {
-          "background": "#1A1A1A",
+          "background": "#3D3226",
           "background_gradient": "",
           "text": "#FFFFFF",
           "button": "#C89B3C",
-          "button_label": "#1A1A1A",
+          "button_label": "#3D3226",
           "secondary_button_label": "#FFFFFF",
           "shadow": "#121212"
         }
@@ -195,11 +195,11 @@
       },
       "scheme-5": {
         "settings": {
-          "background": "#262421",
+          "background": "#2A2119",
           "background_gradient": "",
           "text": "#FFFFFF",
           "button": "#C89B3C",
-          "button_label": "#262421",
+          "button_label": "#2A2119",
           "secondary_button_label": "#FFFFFF",
           "shadow": "#121212"
         }

@@ -161,6 +161,12 @@
                             {{- item.product.title | escape -}}
                           </a>
 
+                          {%- liquid
+                            assign show_compare = false
+                            if item.original_price == item.final_price and item.variant.compare_at_price > item.variant.price
+                              assign show_compare = true
+                            endif
+                          -%}
                           {%- if item.original_price != item.final_price -%}
                             <div class="cart-item__discounted-prices">
                               <span class="visually-hidden">
@@ -168,6 +174,21 @@
                               </span>
                               <s class="cart-item__old-price product-option">
                                 {{- item.original_price | money -}}
+                              </s>
+                              <span class="visually-hidden">
+                                {{ 'products.product.price.sale_price' | t }}
+                              </span>
+                              <strong class="cart-item__final-price product-option">
+                                {{ item.final_price | money }}
+                              </strong>
+                            </div>
+                          {%- elsif show_compare -%}
+                            <div class="cart-item__discounted-prices">
+                              <span class="visually-hidden">
+                                {{ 'products.product.price.regular_price' | t }}
+                              </span>
+                              <s class="cart-item__old-price product-option">
+                                {{- item.variant.compare_at_price | money -}}
                               </s>
                               <span class="visually-hidden">
                                 {{ 'products.product.price.sale_price' | t }}

@@ -1,0 +1,87 @@
+{%- comment -%}
+  Turns the vertical facet sidebar (#main-collection-filters) into a slide-in
+  left drawer, opened by .collection-filter__toggle. The dim is a CSS-only
+  body::before; this script just toggles the `filters-open` class and manages
+  the close (✕) button, click-outside, and Esc. Event-delegated so it survives
+  the facets AJAX re-render.
+{%- endcomment -%}
+<script>
+  if (!window.__collectionFilterDrawer) {
+    window.__collectionFilterDrawer = true;
+
+    var closeDrawer = function () {
+      document.body.classList.remove('filters-open');
+      document.querySelectorAll('.collection-filter__toggle').forEach(function (t) {
+        t.setAttribute('aria-expanded', 'false');
+      });
+    };
+
+    var ensureClose = function () {
+      if (!document.querySelector('.collection-filter__close')) {
+        var btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'collection-filter__close';
+        btn.setAttribute('aria-label', 'Close filters');
+        btn.innerHTML = '&times;';
+        document.body.appendChild(btn);
+      }
+    };
+
+    document.addEventListener('click', function (e) {
+      if (e.target.closest('.collection-filter__toggle')) {
+        ensureClose();
+        document.body.classList.add('filters-open');
+        e.target.closest('.collection-filter__toggle').setAttribute('aria-expanded', 'true');
+        return;
+      }
+      if (!document.body.classList.contains('filters-open')) return;
+      // Close when clicking the ✕ or anywhere outside the drawer panel
+      if (e.target.closest('.collection-filter__close') || !e.target.closest('#main-collection-filters')) {
+        closeDrawer();
+      }
+    });
+
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') closeDrawer();
+    });
+
+    // The summary row + product count are rendered in Liquid (.collection-summary,
+    // below the toolbar). Dawn keeps the active filter chips inside the sidebar
+    // drawer (#main-collection-filters) — which is now a hidden slide-in — so we
+    // relocate the chips into the summary row and re-relocate after each AJAX
+    // re-render. Dawn updates the moved node in place (it targets by class).
+    var refresh = function () {
+      var row = document.querySelector('.collection-summary');
+      if (!row) return;
+      var freshFacets = document.querySelector('#main-collection-filters .active-facets-desktop');
+      if (freshFacets && freshFacets.parentElement !== row) {
+        var oldFacets = row.querySelector('.active-facets-desktop');
+        if (oldFacets) oldFacets.remove();
+        row.appendChild(freshFacets);
+      }
+    };
+
+    document.addEventListener('DOMContentLoaded', refresh);
+    refresh();
+
+    var gridEl = document.getElementById('ProductGridContainer');
+    if (gridEl) {
+      new MutationObserver(function () {
+        setTimeout(refresh, 60);
+      }).observe(gridEl, { childList: true, subtree: true });
+    }
+
+    // Selecting a filter (checkbox/radio) applies it via Dawn's AJAX — close the drawer too
+    document.addEventListener('change', function (e) {
+      var input = e.target;
+      if (
+        input &&
+        (input.type === 'checkbox' || input.type === 'radio') &&
+        input.closest('#main-collection-filters') &&
+        document.body.classList.contains('filters-open')
+      ) {
+        closeDrawer();
+      }
+    });
+  }
+</script>

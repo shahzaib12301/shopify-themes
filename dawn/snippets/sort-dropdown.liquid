@@ -1,0 +1,120 @@
+{%- comment -%}
+  Custom styled sort dropdown. Replaces the native <select id="SortBy"> visual
+  with a branded panel (caret pointer, highlighted selected row, custom
+  scrollbar). Selecting an option writes back to the real <select> and fires an
+  `input` event so Dawn's FacetFiltersForm applies the sort via AJAX.
+
+  Dawn's renderAdditionalElements() rebuilds `.sorting`.innerHTML on every
+  sort/filter, which wipes this dropdown and restores the native select (the
+  injected <script> does NOT re-run). A persistent MutationObserver on the
+  stable `.facets-vertical-sort` ancestor rebuilds it after each re-render.
+{%- endcomment -%}
+<script>
+  (function () {
+    if (window.__sortDropdownInit) return;
+    window.__sortDropdownInit = true;
+
+    var build = function (root) {
+      var select = root.querySelector('#SortBy');
+      if (!select || root.querySelector('.sort-select')) return;
+      var field = select.closest('.select') || select.parentElement;
+
+      var wrap = document.createElement('div');
+      wrap.className = 'sort-select';
+
+      var btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'sort-select__button';
+      btn.setAttribute('aria-haspopup', 'listbox');
+      btn.setAttribute('aria-expanded', 'false');
+      btn.innerHTML =
+        '<span class="sort-select__value"></span>' +
+        '<svg class="sort-select__caret" viewBox="0 0 10 6" aria-hidden="true">' +
+        '<path d="M1 1l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.5" ' +
+        'stroke-linecap="round" stroke-linejoin="round"/></svg>';
+
+      var panel = document.createElement('div');
+      panel.className = 'sort-select__panel';
+      panel.setAttribute('role', 'listbox');
+      panel.hidden = true;
+
+      var valueEl = btn.querySelector('.sort-select__value');
+
+      var syncSelected = function () {
+        var sel = select.options[select.selectedIndex];
+        valueEl.textContent = sel ? sel.textContent.trim() : '';
+        panel.querySelectorAll('.sort-select__option').forEach(function (o) {
+          var on = o.dataset.value === select.value;
+          o.classList.toggle('is-selected', on);
+          o.setAttribute('aria-selected', String(on));
+        });
+      };
+
+      Array.prototype.forEach.call(select.options, function (opt) {
+        var o = document.createElement('button');
+        o.type = 'button';
+        o.className = 'sort-select__option';
+        o.setAttribute('role', 'option');
+        o.dataset.value = opt.value;
+        o.textContent = opt.textContent.trim();
+        o.addEventListener('click', function () {
+          select.value = opt.value;
+          select.dispatchEvent(new Event('input', { bubbles: true }));
+          select.dispatchEvent(new Event('change', { bubbles: true }));
+          syncSelected();
+          close();
+        });
+        panel.appendChild(o);
+      });
+
+      var open = function () {
+        panel.hidden = false;
+        wrap.classList.add('is-open');
+        btn.setAttribute('aria-expanded', 'true');
+      };
+      var close = function () {
+        panel.hidden = true;
+        wrap.classList.remove('is-open');
+        btn.setAttribute('aria-expanded', 'false');
+      };
+
+      btn.addEventListener('click', function (e) {
+        e.stopPropagation();
+        if (panel.hidden) { open(); } else { close(); }
+      });
+      document.addEventListener('click', function (e) {
+        if (!wrap.contains(e.target)) close();
+      });
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') close();
+      });
+
+      wrap.appendChild(btn);
+      wrap.appendChild(panel);
+      if (field) field.classList.add('sort-select__native-hidden');
+      select.setAttribute('tabindex', '-1');
+      (field || select).insertAdjacentElement('afterend', wrap);
+      syncSelected();
+
+      select.addEventListener('change', syncSelected);
+    };
+
+    var initAll = function () {
+      document.querySelectorAll('.facets-vertical-sort').forEach(build);
+    };
+
+    var observe = function () {
+      document.querySelectorAll('.facets-vertical-sort').forEach(function (root) {
+        if (root.__sortObserved) return;
+        root.__sortObserved = true;
+        new MutationObserver(function () {
+          setTimeout(initAll, 20);
+        }).observe(root, { childList: true, subtree: true });
+      });
+    };
+
+    var boot = function () { initAll(); observe(); };
+    document.addEventListener('DOMContentLoaded', boot);
+    boot();
+  })();
+</script>
